@@ -1,6 +1,6 @@
-addLayer("c", {
-        layer: "c", // This is assigned automatically, both to the layer and all upgrades, etc. Shown here so you know about it
-        name: "Candies", // This is optional, only used in a few places, If absent it just uses the layer id.
+addLayer("rp", {
+        layer: "rp", // This is assigned automatically, both to the layer and all upgrades, etc. Shown here so you know about it
+        name: "Roblox Points", // This is optional, only used in a few places, If absent it just uses the layer id.
         startData() { return {
             unl: true,
 			points: new Decimal(0),
@@ -9,10 +9,10 @@ addLayer("c", {
             buyables: {}, // You don't actually have to initialize this one
             beep: false,
         }},
-        color:() => "#4BDC13",
-        requires:() => new Decimal(10), // Can be a function that takes requirement increases into account
-        resource: "lollipops", // Name of prestige currency
-        baseResource: "candies", // Name of resource prestige is based on
+        color:() => "#abb0b8",
+        requires:() => new Decimal(1), // Can be a function that takes requirement increases into account
+        resource: "Roblox Points", // Name of prestige currency
+        baseResource: "Currency Pieces", // Name of resource prestige is based on
         baseAmount() {return player.points}, // Get the current amount of baseResource
         type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
         exponent: 0.5, // Prestige currency exponent
@@ -31,7 +31,7 @@ addLayer("c", {
         row: 0, // Row the layer is in on the tree (0 is the first row)
         effect() {
             return { // Formulas for any boosts inherent to resources in the layer. Can return a single value instead of an object if there is just one effect
-            waffleBoost: (true == false ? 0 : Decimal.pow(player[this.layer].points, 0.2)),
+            Robux: (true == false ? 0 : Decimal.pow(player[this.layer].points, 0.2)),
             icecreamCap: (player[this.layer].points * 10)
         }},
         effectDescription() { // Optional text to describe the effects
@@ -153,171 +153,4 @@ addLayer("c", {
                     Adds + " + format(data.effect.first) + " things and multiplies stuff by " + format(data.effect.second)
                 },
                 unl() { return player[this.layer].unl }, 
-                canAfford() {
-                    return player[this.layer].points.gte(tmp.buyables[this.layer][this.id].cost)},
-                buy() { 
-                    cost = tmp.buyables[this.layer][this.id].cost
-                    player[this.layer].points = player[this.layer].points.sub(cost)	
-                    player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
-                    player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
-                },
-                buyMax() {}, // You'll have to handle this yourself if you want
-            },
-        },
-        doReset(resettingLayer){ // Triggers when this layer is being reset, along with the layer doing the resetting. Not triggered by lower layers resetting, but is by layers on the same row.
-            if(layers[resettingLayer].row > this.row) fullLayerReset(this.layer) // This is actually the default behavior
-        },
-        convertToDecimal() {
-            // Convert any layer-specific Decimal values (besides points, total, and best) from String to Decimal (used when loading save)
-        },
-        layerShown() {return true}, // Condition for when layer appears on the tree
-        update(diff) {
-            if (player[this.layer].upgrades.includes(11)) player.points = player.points.add(tmp.pointGen.times(diff)).max(0)
-        }, // Do any gameloop things (e.g. resource generation) inherent to this layer
-        automate() {
-        }, // Do any automation inherent to this layer if appropriate
-        updateTemp() {
-        }, // Do any necessary temp updating, not that important usually
-        resetsNothing() {return false},
-        onPrestige(gain) {
-            return
-        }, // Useful for if you gain secondary resources or have other interesting things happen to this layer when you reset it. You gain the currency after this function ends.
-
-        hotkeys: [
-            {key: "c", desc: "C: reset for lollipops or whatever", onPress(){if (player[this.layer].unl) doReset(this.layer)}},
-            {key: "ctrl+c" + this.layer, desc: "Ctrl+c: respec things", onPress(){if (player[this.layer].unl) respecBuyables(this.layer)}},
-        ],
-        incr_order: [], // Array of layer names to have their order increased when this one is first unlocked
-
-        microtabs: {
-            stuff: {
-                first: {
-                    content: ["upgrades", ["display-text", function() {return "confirmed"}]]
-                },
-                second: {
-                    content: [["upgrade", 11],
-                            ["row", [["upgrade", 11], "blank", "blank", ["upgrade", 11],]],
-                        
-                        ["display-text", function() {return "double confirmed"}]]
-                },
-            },
-            otherStuff: {
-                // There could be another set of microtabs here
-            }
-        },
-
-        // Optional, lets you format the tab yourself by listing components. You can create your own components in v.js.
-        tabFormat: {
-            "main tab": {
-                buttonStyle() {return  {'color': 'orange'}},
-                content:
-                    ["main-display",
-                    ["prestige-button", function() {return "Melt your points into "}],
-                    ["blank", "5px"], // Height
-                    ["raw-html", function() {return "<button onclick='console.log(`yeet`)'>'HI'</button>"}],
-                    ["display-text",
-                        function() {return 'I have ' + format(player.points) + ' pointy points!'},
-                        {"color": "red", "font-size": "32px", "font-family": "Comic Sans MS"}],
-                    "h-line", "milestones", "blank", "upgrades", "challs"],
-            },
-            thingies: {
-                style() {return  {'background-color': '#222222'}},
-                buttonStyle() {return {'border-color': 'orange'}},
-                content:[
-                    ["buyables", "150px"], "blank",
-                    ["row", [
-                        ["toggle", ["c", "beep"]], ["blank", ["30px", "10px"]], // Width, height
-                        ["display-text", function() {return "Beep"}], "blank", ["v-line", "200px"],
-                        ["column", [
-                            ["prestige-button", function() {return "Be redundant for "}, {'width': '150px', 'height': '30px'}],
-                            ["prestige-button", function() {return "Be redundant for "}, {'width': '150px', 'height': '30px'}],
-                        ]], 
-                    ], {'width': '600px', 'height': '350px', 'background-color': 'green', 'border-style': 'solid'}],
-                    "blank",
-                    ["display-image", "discord.png"],],
-            },
-            illuminati: {
-                unl() {return (hasUpg("c", 13))},
-                content:[
-                    ["raw-html", function() {return "<h1> C O N F I R M E D </h1>"}],
-                    ["microtabs", "stuff", {'width': '600px', 'height': '350px', 'background-color': 'brown', 'border-style': 'solid'}]
-                ]
-            }
-
-        },
-        style() {return {
-            'background-color': '#3325CC' 
-        }},
-        nodeStyle() {return { // Style on the layer node
-            'color': '#3325CC',
-            'text-decoration': 'underline' 
-        }},
-        componentStyles: {
-            "chall"() {return {'height': '200px'}},
-            "prestige-button"() {return {'color': '#AA66AA'}},
-        },
-        tooltip() { // Optional, tooltip displays when the layer is unlocked
-            let tooltip = formatWhole(player[this.layer].points) + " " + this.resource
-            if (player[this.layer].buyables[11].gt(0)) tooltip += "\n" + formatWhole(player[this.layer].buyables[11]) + " Exhancers"
-            return tooltip
-        },
-        shouldNotify() { // Optional, layer will be highlighted on the tree if true.
-                         // Layer will automatically highlight if an upgrade is purchasable.
-            return (player.c.buyables[11] == 1)
-        }
-})
-
-// This layer is mostly minimal but it uses a custom prestige type
-addLayer("f", {
-        startData() { return {
-            unl: false,
-			points: new Decimal(0),
-            boop: false,
-        }},
-        color:() => "#FE0102",
-        requires() {return new Decimal(10)}, 
-        resource: "farm points", 
-        baseResource: "candies", 
-        baseAmount() {return player.points},
-        type: "custom", // A "Custom" type which is effectively static
-        exponent: 0.5,
-        base: 3,
-        resCeil: true,
-        canBuyMax:() => true,
-        gainMult() {
-            return new Decimal(1)
-        },
-        gainExp() {
-            return new Decimal(1)
-        },
-        row: 1,
-        layerShown() {return true}, 
-        branches: [["c", 1]], // Each pair corresponds to a line added to the tree when this node is unlocked. The letter is the other end of the line, and the number affects the color, 1 is default
-
-        tooltipLocked() { // Optional, tooltip displays when the layer is locked
-            return ("This weird farmer dinosaur will only see you if you have at least " + this.requires() + " candies. You only have " + formatWhole(player.points))
-        },
-
-        midsection: [
-            "blank", ['display-image', 'https://images.beano.com/store/24ab3094eb95e5373bca1ccd6f330d4406db8d1f517fc4170b32e146f80d?auto=compress%2Cformat&dpr=1&w=390'],
-            ["display-text", "Bork bork!"]
-        ],
-
-        // The following are only currently used for "custom" Prestige type:
-        prestigeButtonText() { //Is secretly HTML
-            if (!this.canBuyMax()) return "Hi! I'm a <u>weird dinosaur</u> and I'll give you a Farm Point in exchange for all of your candies and lollipops! (At least " + formatWhole(tmp.nextAt[layer]) + " candies)"
-            if (this.canBuyMax()) return "Hi! I'm a <u>weird dinosaur</u> and I'll give you <b>" + formatWhole(tmp.resetGain[this.layer]) + "</b> Farm Points in exchange for all of your candies and lollipops! (You'll get another one at " + formatWhole(tmp.nextAtDisp[layer]) + " candies)"
-        },
-        getResetGain() {
-            return getResetGain(this.layer, useType = "static")
-        },
-        getNextAt(canMax=false) { //  
-            return getNextAt(this.layer, canMax, useType = "static")
-        },
-        canReset() {
-            return tmp.layerAmt[this.layer].gte(tmp.nextAt[this.layer])
-        },
-    }, 
-)
-
-
+                canA
