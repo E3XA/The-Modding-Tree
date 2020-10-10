@@ -8,7 +8,7 @@
 			offlineLimit: 24  // In hours
 		}
 	</script>
-	<title>The Modding Tree</title>
+	<title>The Roblox Tree</title>
 	<link rel="stylesheet" type="text/css" href="style.css" />
 	<link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
@@ -32,19 +32,19 @@
 		<div v-if="player.tab=='gameEnded'" class="fullWidth">
 			<br>
 			<h2>{{modInfo.name}} {{VERSION.withoutName}}</h2><br><br>
-			<h3>Congratulations! You have reached the end and beaten this game, but for now...</h3><br>
-			<h3>Please check the Discord to see there are new content updates!</h3><br><br>
-			<div v-if="!player.timePlayedReset">It took you {{formatTime(player.timePlayed)}} to beat the game.</div>
-			<div v-if="player.timePlayedReset">Make sure that you record the time in your stream or else your speedrun won't count!</div>
+			<h3>yay u beat roblox (for now...)</h3><br>
+			<h3>wait for next update but eat chocolate first</h3><br><br>
+			<div v-if="!player.timePlayedReset">It took you {{formatTime(player.timePlayed)}} to beat roblox</div>
+			<div v-if="player.timePlayedReset">dont speedrun</div>
 			<br>
 			<button class="longUpg can" onclick="hardReset(true)">Play Again</button>&nbsp;&nbsp;&nbsp;&nbsp;<button class="longUpg can" onclick="keepGoing()">Keep Going</button>
 			<br><br><br>
 			<a class="link" href="https://discord.gg/F3xveHV" target="_blank">The Modding Tree Discord</a><br>
 			<a class="link" href="http://discord.gg/wwQfgPa" target="_blank">Main Prestige Tree Discord</a><br>
 			<br><br>
-			If you would like to speedrun this, press Play Again and record your attempt, then submit on the Discord Server in the channel #speedrun-submissions.
+			if u want to speedrun this then u should get help
 			<br><br><br>
-			<h1>Oh, you are still reading this?</h1>
+			<h1>still reading this? go away</h1>
 			<br>
 		</div>
 		<div v-if="player.tab=='changelog'" class="col right">
@@ -110,8 +110,8 @@
 					<td><button class="opt" onclick="hardReset()">HARD RESET</button></td>
 				</tr>
 				<tr>
-					<td><button class="opt" onclick="exportSave()">Export to clipboard</button></td>
-					<td><button class="opt" onclick="importSave()">Import</button></td>
+					<td><button class="opt" onclick="exportSave()">export (aka lol noob cheat)</button></td>
+					<td><button class="opt" onclick="importSave()">import noob cheat</button></td>
 					<td><button class="opt" onclick="toggleOpt('offlineProd')">Offline Prod: {{ player.offlineProd?"ON":"OFF" }}</button></td>
 				</tr>
 				<tr>
